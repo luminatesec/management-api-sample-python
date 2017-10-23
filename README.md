@@ -16,9 +16,9 @@ Autehtication to Luminate Security Service is Oauth based.
 
 * Set luminate.properties configuration file (see section #2 - Configuration)
 
-* Set luminate.application configuration file (see section #2 - Configuration)
+* Set luminate.applications configuration file (see section #2 - Configuration)
 
-* Run the container to create a new application as specified in the luminate.application configuration file 
+* Run the container to create a new application as specified in the luminate.applications configuration file 
 
 ```
 #!bash
@@ -37,7 +37,7 @@ $ docker run -v <host dir for debug log files>:/opt/luminate-client/logs -v <hos
   |luminate_domain     | Mandatory | N/A             | Your Luminate Security Domain                                                                           |
 
 
-  luminate.application configuration file is located at $APP_CONFIGURATION_PATH includes the following parameters:
+  luminate.applications configuration file is located at $APP_CONFIGURATION_PATH includes the following parameters per section. Each section represents a single application. luminate.applications can include one or more application(s) :
 
   |Name                | Required  | Default Value | Description                                                                              |
   |--------------------|-----------|---------------|------------------------------------------------------------------------------------------|
