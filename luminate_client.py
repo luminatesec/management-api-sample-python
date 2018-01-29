@@ -33,7 +33,6 @@ def setup_env(conf_file):
         luminate_domain = luminate_dic.get(LUMINATE_ENVIRONMENT,'luminate_domain')
         client_id = luminate_dic.get(LUMINATE_ENVIRONMENT,'client_id')
         client_secret = luminate_dic.get(LUMINATE_ENVIRONMENT,'client_secret')
-        verify_ssl = luminate_dic.getboolean(LUMINATE_ENVIRONMENT, 'verify_ssl')
     except Exception as e:
         logger.critical("Failed parsing Luminate environment configuration file: %s - %s"% (conf_file, e))
         return None
@@ -41,6 +40,10 @@ def setup_env(conf_file):
     # Creating a Luminate Security Object (Oauth based authentication)
     logger.debug("Creating Luminate Object (Oauth based authentication) - tenant name: %s, Luminate domain: %s" % (tenant_name, luminate_domain))
     base_url='https://api.{}.{}'.format(tenant_name, luminate_domain)
+
+    verify_ssl = True
+    if luminate_dic.has_option(LUMINATE_ENVIRONMENT, 'verify_ssl'):
+        verify_ssl = luminate_dic.getboolean(LUMINATE_ENVIRONMENT, 'verify_ssl')
 
     try:
         luminate = Luminate(base_url, API_VERSION, client_id, client_secret, verify_ssl)
