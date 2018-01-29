@@ -51,7 +51,7 @@ $ docker run -v <host dir for debug log files>:/opt/luminate-client/logs -v <hos
   |site_name           | Mandatory | N/A           | The name of the site on which this application resides                                   |
   |email               | Optional  | None          | The e-mail address of the user to whom you would like to grant access to the application. Either email or group can be provided. |    
   |group_name          | Optional  | None          | The name of the group whose members should be granted with access to the application. Either email or group can be provided.     |                       
-  |idp                 | Optional  | None          | Identity Provider of the user/group.                                                     |
+  |idp                 | Optional  | None          | Identity Provider of the user/group. The value should be an empy string for local users/groups                                                    |
   |ssh_users           | Optional  | N/A           | Specifies a list of user names that are available for SSH log-in on the remote machine. For example: ubuntu,unix1. This field is mandatory for SSH applications, not relevnat for web applications).    |
    |assigned_ssh_users  | Optional  | N/A           | A list of valid user-names on the remote SSH machine which this user will be allowed to log-in with on the remote-machine. For example: ubuntu,unix1. This filed should not be supplied for non-SSH applications). |
   
