@@ -4,7 +4,7 @@ This README would normally document whatever steps are necessary to get your app
 
 ### What is this repository for? ###
 
-This implemntation of Luminate Security client is used to automate the process of creating applications. 
+This implemntation of Luminate Security client is used to automate the process of creating applications (based on Luminate public API https://luminate.docs.apiary.io/#). 
 Autehtication to Luminate Security Service is Oauth based.
 
 
@@ -16,9 +16,9 @@ Autehtication to Luminate Security Service is Oauth based.
 
 * Set luminate.properties configuration file (see section #2 - Configuration)
 
-* Set luminate.applications configuration file (see section #2 - Configuration)
+* Set luminate.application configuration file (see section #2 - Configuration)
 
-* Run the container to create a new application as specified in the luminate.applications configuration file 
+* Run the container to create a new application as specified in the luminate.application configuration file 
 
 ```
 #!bash
@@ -27,7 +27,8 @@ $ docker run -v <host dir for debug log files>:/opt/luminate-client/logs -v <hos
 ```
 
 #### 2. Configuration
-  luminate.properties configuration file is located at $APP_CONFIGURATION_PATH includes the following parameters:
+
+  luminate.properties configuration file that is located under ${APP_CONFIGURATION_PATH} should include the following parameters:
 
   |Name                | Required  | Default Value   | Description                                                                                             | 
   |--------------------|-----------|---------------- |---------------------------------------------------------------------------------------------------------|
@@ -37,14 +38,19 @@ $ docker run -v <host dir for debug log files>:/opt/luminate-client/logs -v <hos
   |luminate_domain     | Mandatory | N/A             | Your Luminate Security Domain                                                                           |
 
 
-  luminate.applications configuration file is located at $APP_CONFIGURATION_PATH includes the following parameters per section. Each section represents a single application. luminate.applications can include one or more application(s) :
+  luminate.application configuration file that is located under ${APP_CONFIGURATION_PATH} should include the following parameters:
 
   |Name                | Required  | Default Value | Description                                                                              |
   |--------------------|-----------|---------------|------------------------------------------------------------------------------------------|
   |app_name            | Mandatory | N/A           | Application Name                                                                         |
   |description         | Optional  | Empty String  | Application Description                                                                  |
   |app_type            | Mandatory | N/A           | Application Type: HTTP or SSH                                                            |
+  |ssh_users           | Optional  | N/A           | Specifies a list of user names that are available for SSH log-in on the remote machine   |
+  |                    |           |               | (cannot be empty for SSH applications, not relevnat for web applications)                                                   |
   |internal_address    | Mandatory | N/A           | The Application internal address                                                         |
   |site_name           | Mandatory | N/A           | The name of the site on which this application resides                                   |
-  |email               | Optional  | None          | The e-mail address of the user to whom you would like to grant access to the application |                       
-  |idp                 | Optional  | None          | Identity Provider of the user. This field should be empty in case of a local user        |
+  |email               | Optional  | None          | The e-mail address of the user to whom you would like to grant access to the application |    
+  |group_name          | Optional  | None          | The name of the group whose members should be granted with access to the application     |                       
+  |idp                 | Optional  | None          | Identity Provider of the user/group.                                                     |
+  |assigned_ssh_users  | Optional  | N/A           | A list of valid user-names on the remote SSH machine which this user will be allowed to  |
+  |                    |           |               | log-in with on the remote-machine. (should not be supplied for non-SSH applications)     |
