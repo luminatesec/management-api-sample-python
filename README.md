@@ -47,7 +47,7 @@ $ docker run -v <host dir for debug log files>:/opt/luminate-client/logs -v <hos
   |app_name            | Mandatory | N/A           | Application Name                                                                         |
   |description         | Optional  | Empty String  | Application Description                                                                  |
   |app_type            | Mandatory | N/A           | Application Type: HTTP or SSH                                                            |
-  |internal_address    | Mandatory | N/A           | The Application internal address                                                         |
+  |internal_address    | Mandatory | N/A           | The Application internal address. For HTTP applications the format should be http://<DNS / IP address>:<port>. For SSH applications the format should be tcp://<DNS / IP address>:<port> |
   |site_name           | Mandatory | N/A           | The name of the site on which this application resides                                   |
   |email               | Optional  | None          | The e-mail address of the user to whom you would like to grant access to the application. Either email or group can be provided. |    
   |group_name          | Optional  | None          | The name of the group whose members should be granted with access to the application. Either email or group can be provided.     |                       
