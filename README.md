@@ -37,7 +37,7 @@ $ docker run -v <host dir for debug log files>:/opt/luminate-client/logs -v <hos
   |client_id           | Mandatory | N/A             | The client id of your API client that was configured through Luminate Administration Portal             |
   |client_secret       | Mandatory | N/A             | The client secret of the API client that was configured through Luminate Security Administration Portal |
   |tenant_name         | Mandatory | N/A             | Your Luminate Security tenant name                                                                      |
-  |luminate_domain     | Mandatory | N/A             | Your Luminate Security Domain                                                                           |
+  |luminate_domain     | Mandatory | N/A             | Your Luminate Security Domain. For example luminatesec.com                      |
 
 
   luminate.application configuration file that should be located under the conf directory (path is provided as a parameter to the 'docker run' command). It can include multiple applications in different sections, each of which contains keys with values as specified below. Explore Python ConfigParser to learn more about the structure of the file. 
