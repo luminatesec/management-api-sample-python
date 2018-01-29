@@ -23,12 +23,14 @@ Autehtication to Luminate Security Service is Oauth based.
 ```
 #!bash
 
+$ docker build -t luminate-client .
+
 $ docker run -v <host dir for debug log files>:/opt/luminate-client/logs -v <host dir for conf files>:/opt/luminate-client/conf luminate-client
 ```
 
 #### 2. Configuration
 
-  luminate.properties configuration file that is located under ${APP_CONFIGURATION_PATH} should include the following parameters:
+  luminate.properties configuration file that is located under the conf directory provided as a parameter to the docker run command  should include the following parameters:
 
   |Name                | Required  | Default Value   | Description                                                                                             | 
   |--------------------|-----------|---------------- |---------------------------------------------------------------------------------------------------------|
@@ -38,7 +40,7 @@ $ docker run -v <host dir for debug log files>:/opt/luminate-client/logs -v <hos
   |luminate_domain     | Mandatory | N/A             | Your Luminate Security Domain                                                                           |
 
 
-  luminate.application configuration file that is located under ${APP_CONFIGURATION_PATH} should include the following parameters:
+  luminate.application configuration file that is located under the conf directory provided as a parameter to the docker run command should include the following parameters:
 
   |Name                | Required  | Default Value | Description                                                                              |
   |--------------------|-----------|---------------|------------------------------------------------------------------------------------------|
