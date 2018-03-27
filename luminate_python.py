@@ -8,8 +8,9 @@ will construct a Luminate object as described below.
 
 import json
 from oauthlib.oauth2 import BackendApplicationClient
-from requests_oauthlib import OAuth2Session
 import logging
+
+from token_refetcher_oauth2session import TokenReFetcherOAuth2Session
 
 
 class Luminate(object):
@@ -17,16 +18,14 @@ class Luminate(object):
     Clients interact with Luminate by constructing an instance of this object and calling its methods.
     """
 
-    def __init__(self, server, rest_api_version,client_id, client_secret, verify_ssl=True):
+    def __init__(self, server, rest_api_version, client_id, client_secret, verify_ssl=True):
         """Construct a JIRA client instance.
         :param server -- the server address and context path to use. Defaults to ``http://localhost:2990/jira``.
         :param rest_api_version -- the version of the REST resources under rest_path to use. Defaults to ``1``.
         :param client_id -- client_id as provided by the OAuth Provider (Luminate Security)
         :param client_secret -- client_secret as provided by the OAuth Provider (Luminate Security)
         """
-        self._options = {}
-        self._options['server'] = server
-        self._options['rest_api_version'] = rest_api_version
+        self._options = {'server': server, 'rest_api_version': rest_api_version}
 
         self._create_oauth_session(client_id, client_secret, verify_ssl)
         self._logger = logging.getLogger(__name__)
@@ -37,15 +36,12 @@ class Luminate(object):
 
         client = BackendApplicationClient(client_id=client_id)
         client.prepare_request_body()
-        oauth = OAuth2Session(client=client)
-        token = oauth.fetch_token(token_url=token_url,
-                                  client_id=client_id,
-                                  client_secret=client_secret,
-                                  verify=verify_ssl)
+        oauth = TokenReFetcherOAuth2Session(token_url=token_url,
+                                            client_secret=client_secret,
+                                            client=client,
+                                            verify=verify_ssl)
 
         self._session = oauth
-
-        return token
 
     def create_app(self, app_name, description, app_type, internal_address, site_name, ssh_users):
         """Create a new Application at a specific Site.
@@ -65,7 +61,7 @@ class Luminate(object):
         payload = {
             'name': app_name,
             'description': description,
-            'type':app_type,
+            'type': app_type,
             'connection_settings': connection_settings,
             'site_name': site_name,
         }
@@ -77,8 +73,8 @@ class Luminate(object):
                 raise ValueError('A request for creating an SSH application must include SSH users')
 
         response = self._session.post(url, data=json.dumps(payload))
-        self._logger.debug("Request to Luminate for creating an application :%s returned response: %s, status code:%s" \
-                           % (app_name, response.content,response.status_code))
+        self._logger.debug("Request to Luminate for creating an application :%s returned response: %s, status code:%s"
+                           % (app_name, response.content, response.status_code))
 
         if response.status_code != 201:
             response.raise_for_status()
@@ -90,7 +86,7 @@ class Luminate(object):
 
     def update_app(self, app_id, app_name, description, app_type, internal_address, site_name, ssh_users):
         """Updates an existing application.
-        :param app: Application ID
+        :param app_id: Application ID
         :param app_name: Application Name
         :param description: A string which describes the application
         :param app_type: Application type - Valid values are HTTP, SSH.
@@ -121,7 +117,7 @@ class Luminate(object):
                     'Request to Luminate for updating an application %s failed - missing SSH users' % app_name)
 
         response = self._session.put(url, data=json.dumps(payload))
-        self._logger.debug("Request to Luminate for updating an application :%s returned response: %s, status code:%s" \
+        self._logger.debug("Request to Luminate for updating an application :%s returned response: %s, status code:%s"
                            % (app_name, response.content, response.status_code))
 
         if response.status_code != 200:
@@ -130,12 +126,10 @@ class Luminate(object):
 
         return 0
 
-
-
     def assign_user_to_app(self, app_id, email, idp, ssh_users):
         """
         Assign a user to an application.
-        :param app: Application ID
+        :param app_id: Application ID
         :param email: The e-mail address of the user to whom you would like to grant access to the application.
         :param idp: Identity Provider of the user.
         :param ssh_users: A list of user names with which the user will be able to log-in to the ssh machine.
@@ -157,7 +151,7 @@ class Luminate(object):
         response = self._session.post(url, data=json.dumps(payload))
 
         self._logger.debug("Request to Luminate for assigning a user :%s to application %s returned response:\n %s,\
-                            status code:%s" % (email,app_id,response.content,response.status_code))
+                            status code:%s" % (email, app_id, response.content, response.status_code))
 
         if response.status_code != 200:
             response.raise_for_status()
@@ -190,7 +184,7 @@ class Luminate(object):
         response = self._session.post(url, data=json.dumps(payload))
 
         self._logger.debug("Request to Luminate for assigning a group :%s to application %s returned response:\n %s,\
-                            status code:%s" % (name,app,response.content,response.status_code))
+                            status code:%s" % (name, app, response.content, response.status_code))
 
         if response.status_code != 200:
             response.raise_for_status()

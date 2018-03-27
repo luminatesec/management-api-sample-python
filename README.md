@@ -4,8 +4,8 @@ This README would normally document whatever steps are necessary to get your app
 
 ### What is this repository for? ###
 
-This implemntation of Luminate Security client is used to automate the process of creating applications (based on Luminate public API https://luminate.docs.apiary.io/#). 
-Autehtication to Luminate Security Service is Oauth based.
+This implementation of Luminate Security client is used to automate the process of creating applications (based on Luminate public API https://luminate.docs.apiary.io/#).
+Authentication to Luminate Security Service is Oauth based.
 
 
 ### How do I get set up? ###
@@ -37,7 +37,7 @@ $ docker run -v <host dir for debug log files>:/opt/luminate-client/logs -v <hos
   |client_id           | Mandatory | N/A             | The client id of your API client that was configured through Luminate Administration Portal             |
   |client_secret       | Mandatory | N/A             | The client secret of the API client that was configured through Luminate Security Administration Portal |
   |tenant_name         | Mandatory | N/A             | Your Luminate Security tenant name                                                                      |
-  |luminate_domain     | Mandatory | N/A             | Your Luminate Security Domain. For example luminatesec.com                      |
+  |luminate_domain     | Mandatory | N/A             | Your Luminate Security Domain. For example luminatesec.com                                              |
 
 
   luminate.applications configuration file that should be located under the conf directory (path is provided as a parameter to the 'docker run' command). It can include multiple applications in different sections, each of which contains keys with values as specified below. Explore Python ConfigParser to learn more about the structure of the file. 
@@ -53,5 +53,5 @@ $ docker run -v <host dir for debug log files>:/opt/luminate-client/logs -v <hos
   |group_name          | Optional  | None          | The name of the group whose members should be granted with access to the application. Either email or group can be provided.     |                       
   |idp                 | Optional  | None          | Identity Provider of the user/group. The value should be an empy string for local users/groups                                                    |
   |ssh_users           | Optional  | N/A           | Specifies a list of user names that are available for SSH log-in on the remote machine. For example: ubuntu,unix1. This field is mandatory for SSH applications, not relevnat for web applications).    |
-   |assigned_ssh_users  | Optional  | N/A           | A list of valid user-names on the remote SSH machine which this user will be allowed to log-in with on the remote-machine. For example: ubuntu,unix1. This filed should not be supplied for non-SSH applications). |
+  |assigned_ssh_users  | Optional  | N/A           | A list of valid user-names on the remote SSH machine which this user will be allowed to log-in with on the remote-machine. For example: ubuntu,unix1. This filed should not be supplied for non-SSH applications). |
   
