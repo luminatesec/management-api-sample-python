@@ -13,6 +13,7 @@ API_VERSION = 1
 
 # Setting up the environment based on the information provided through the configuration file conf/luminate.properties
 def setup_env(conf_file):
+
     # Parsing Luminate environment configuration file
     logger.debug("Parsing Luminate environment configuration file: %s" % conf_file)
 
@@ -20,30 +21,26 @@ def setup_env(conf_file):
     try:
         dataset = luminate_dic.read(conf_file)
     except Exception as e:
-        logger.critical("Failed reading Luminate environment configuration file: %s - %s" % (conf_file, e))
+        logger.critical("Failed reading Luminate environment configuration file: %s - %s"% (conf_file, e))
         return None
 
     if len(dataset) == 0:
-        logger.critical("Failed reading Luminate environment configuration file: %s " % conf_file)
+        logger.critical("Failed reading Luminate environment configuration file: %s "% conf_file)
         return None
 
     try:
-        tenant_name = luminate_dic.get(LUMINATE_ENVIRONMENT, 'tenant_name')
-        luminate_domain = luminate_dic.get(LUMINATE_ENVIRONMENT, 'luminate_domain')
-        client_id = luminate_dic.get(LUMINATE_ENVIRONMENT, 'client_id')
-        client_secret = luminate_dic.get(LUMINATE_ENVIRONMENT, 'client_secret')
+        tenant_name = luminate_dic.get(LUMINATE_ENVIRONMENT,'tenant_name')
+        luminate_domain = luminate_dic.get(LUMINATE_ENVIRONMENT,'luminate_domain')
+        client_id = luminate_dic.get(LUMINATE_ENVIRONMENT,'client_id')
+        client_secret = luminate_dic.get(LUMINATE_ENVIRONMENT,'client_secret')
+        verify_ssl = luminate_dic.getboolean(LUMINATE_ENVIRONMENT, 'verify_ssl')
     except Exception as e:
-        logger.critical("Failed parsing Luminate environment configuration file: %s - %s" % (conf_file, e))
+        logger.critical("Failed parsing Luminate environment configuration file: %s - %s"% (conf_file, e))
         return None
 
     # Creating a Luminate Security Object (Oauth based authentication)
-    logger.debug("Creating Luminate Object (Oauth based authentication) - tenant name: %s, Luminate domain: %s" %
-                 (tenant_name, luminate_domain))
-    base_url = 'https://api.{}.{}'.format(tenant_name, luminate_domain)
-
-    verify_ssl = True
-    if luminate_dic.has_option(LUMINATE_ENVIRONMENT, 'verify_ssl'):
-        verify_ssl = luminate_dic.getboolean(LUMINATE_ENVIRONMENT, 'verify_ssl')
+    logger.debug("Creating Luminate Object (Oauth based authentication) - tenant name: %s, Luminate domain: %s" % (tenant_name, luminate_domain))
+    base_url='https://api.{}.{}'.format(tenant_name, luminate_domain)
 
     try:
         luminate = Luminate(base_url, API_VERSION, client_id, client_secret, verify_ssl)
@@ -55,6 +52,7 @@ def setup_env(conf_file):
 
 # Assigns configured user/group to the provided application
 def assign_entity_to_app(luminate, app, app_id):
+
     if 'email' in app:
         assign_user_to_app(luminate, app, app_id)
     elif 'group_name' in app:
@@ -65,6 +63,7 @@ def assign_entity_to_app(luminate, app, app_id):
 
 
 def assign_user_to_app(luminate, app, app_id):
+
     logger.debug("Assigning user: %s to application: %s" % (app['email'], app_id))
 
     if 'idp' in app:
@@ -78,7 +77,7 @@ def assign_user_to_app(luminate, app, app_id):
         assigned_ssh_users = app['assigned_ssh_users'].split(',')
 
     try:
-        luminate.assign_user_to_app(app_id, app['email'], idp, assigned_ssh_users)
+        luminate.assign_user_to_app(app_id, app['email'], idp,assigned_ssh_users)
 
     except Exception as e:
         logger.critical("Failed to assign user %s to an application %s: %s" % (app['email'], app_id, str(e)))
@@ -86,6 +85,7 @@ def assign_user_to_app(luminate, app, app_id):
 
 
 def assign_group_to_app(luminate, app, app_id):
+
     logger.debug("Assigning group: %s to application: %s" % (app['group_name'], app_id))
 
     if 'idp' in app:
@@ -108,6 +108,7 @@ def assign_group_to_app(luminate, app, app_id):
 
 # Creates a Luminate Security application and assigns a user to it in case one was configured
 def config_app(luminate, app):
+
     if 'app_name' in app and 'app_type' in app and 'internal_address' in app and 'site_name' in app:
         app_name = app['app_name']
         app_type = app['app_type']
@@ -117,7 +118,7 @@ def config_app(luminate, app):
         if ssh_users:
             ssh_users = app['ssh_users'].split(',')
     else:
-        logger.critical("Failed Parsing applications configuration file: %s, missing properties" % APPS_FP)
+        logger.critical("Failed Parsing applications configuration file: %s, missing properties" % (APPS_FP))
         return -1
 
     if 'description' in app:
@@ -126,7 +127,7 @@ def config_app(luminate, app):
         description = ""
 
     # Creating a Luminate Security application based on the information provided at conf/luminate.applications
-    logger.debug("Creating an application %s based on the information provided at %s" % (app_name, APPS_FP))
+    logger.debug("Creating an application %s based on the information provided at %s" %(app_name, APPS_FP))
 
     try:
         app_id = luminate.create_app(app_name, description, app_type, internal_address, site_name, ssh_users)
@@ -135,7 +136,7 @@ def config_app(luminate, app):
         return -1
     description += " Automatically generated by Luminate API client"
     try:
-        luminate.update_app(app_id, app_name, description, app_type, internal_address, site_name, ssh_users)
+        luminate.update_app(app_id,app_name,description, app_type, internal_address, site_name, ssh_users)
     except Exception as e:
         logger.critical(e)
 
@@ -144,12 +145,13 @@ def config_app(luminate, app):
 
 # Parsing Application configuration file
 def configure_apps(luminate, apps_conf_file):
+
     logger.debug("Reading applications configuration file:%s" % apps_conf_file)
     apps_dic = configparser.ConfigParser()
     try:
         dataset = apps_dic.read(apps_conf_file)
     except Exception as e:
-        logger.critical("Failed reading applications configuration file: %s - %s" % (apps_conf_file, e))
+        logger.critical("Failed reading applications configuration file: %s - %s"% (apps_conf_file, e))
         return -1
 
     if len(dataset) == 0:
@@ -163,6 +165,7 @@ def configure_apps(luminate, apps_conf_file):
 
 
 def execute():
+
     logfile = 'logs/' + datetime.datetime.now().strftime('luminate_client_%Y_%m_%d_%H_%M_%S.log')
     logging.basicConfig(filename=logfile, level=logging.DEBUG)
 
@@ -177,8 +180,10 @@ def execute():
     if luminate is None:
         return -1
 
-    return configure_apps(luminate, APPS_FP)
+    return configure_apps(luminate,APPS_FP)
 
 
 if __name__ == '__main__':
     execute()
+
+

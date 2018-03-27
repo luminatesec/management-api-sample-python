@@ -8,8 +8,9 @@ will construct a Luminate object as described below.
 
 import json
 from oauthlib.oauth2 import BackendApplicationClient
-from requests_oauthlib import OAuth2Session
 import logging
+
+from token_refetcher_oauth2session import TokenReFetcherOAuth2Session
 
 
 class Luminate(object):
@@ -35,15 +36,12 @@ class Luminate(object):
 
         client = BackendApplicationClient(client_id=client_id)
         client.prepare_request_body()
-        oauth = OAuth2Session(client=client)
-        token = oauth.fetch_token(token_url=token_url,
-                                  client_id=client_id,
-                                  client_secret=client_secret,
-                                  verify=verify_ssl)
+        oauth = TokenReFetcherOAuth2Session(token_url=token_url,
+                                            client_secret=client_secret,
+                                            client=client,
+                                            verify=verify_ssl)
 
         self._session = oauth
-
-        return token
 
     def create_app(self, app_name, description, app_type, internal_address, site_name, ssh_users):
         """Create a new Application at a specific Site.
