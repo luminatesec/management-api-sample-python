@@ -4,7 +4,7 @@ This README would normally document whatever steps are necessary to get your app
 
 ### What is this repository for? ###
 
-This implementation of Luminate Security client is used to automate the process of creating applications (based on Luminate public API https://luminate.docs.apiary.io/#).
+This implementation of Luminate Security client is used to automate the process of creating applications (based on Luminate public API https://luminatepublicapi.docs.apiary.io/#).
 Authentication to Luminate Security Service is Oauth based.
 
 
