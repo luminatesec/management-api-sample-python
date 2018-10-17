@@ -1,5 +1,8 @@
 # README #
 
+### DEPRECATED SAMPLE USING LUMINATE API V1.###
+Please refer to Luminate Security Python API sample using Luminate API V2 available at https://github.com/luminatesec/luminate_api
+
 This README would normally document whatever steps are necessary to get your application up and running.
 
 ### What is this repository for? ###
